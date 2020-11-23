@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-
+apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
@@ -22,6 +22,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -34,4 +38,9 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+    implementation 'cn.yipianfengye.android:zxing-library:2.2'
+    implementation 'com.github.Mckrgf.FrameMvpProject:module_middleware:1.1.8'
+    implementation 'com.github.Mckrgf.FrameMvpProject:module_common_view:1.1.8'
+    implementation 'com.github.Mckrgf.FrameMvpProject:module_apt:1.1.8'
+    kapt 'com.github.Mckrgf.FrameMvpProject:module_compiler:1.1.8'
 }
