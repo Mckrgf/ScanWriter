@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.uuzuche.lib_zxing.activity.CaptureActivity
 import com.uuzuche.lib_zxing.activity.CodeUtils
 import com.yaobing.module_middleware.Utils.ToastUtil
@@ -30,6 +31,7 @@ class MainActivity : BaseActivity() {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.RECORD_AUDIO
         ), object : PermissionListener {
             override fun onGranted() {  //所有权限授权成功
