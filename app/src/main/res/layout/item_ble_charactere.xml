@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_roundcorner_white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y80"
+        android:orientation="horizontal">
+        <TextView
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="名字"
+            android:textColor="@color/black"
+            android:textSize="@dimen/x30"
+            android:layout_height="match_parent"
+            android:id="@+id/tv_character_name"/>
+        <EditText
+            android:background="@null"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:inputType="number"
+            android:textColor="@color/black"
+            android:textSize="@dimen/x30"
+            android:layout_height="match_parent"
+            android:id="@+id/tv_character_value"/>
+        <Button
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="0.7"
+            android:text="获取"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x30"
+            android:background="@drawable/bg_button_blue_round"
+            android:layout_height="@dimen/y64"
+            android:layout_marginRight="@dimen/x24"
+            android:id="@+id/tv_character_get"/>
+
+    </LinearLayout>
+
+    <include layout="@layout/horizontal_divider"/>
+
+</LinearLayout>

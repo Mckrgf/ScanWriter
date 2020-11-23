@@ -37,6 +37,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation 'com.daimajia.numberprogressbar:library:1.4@aar'
 
     implementation 'cn.yipianfengye.android:zxing-library:2.2'
     implementation 'com.github.Mckrgf.FrameMvpProject:module_middleware:1.1.8'

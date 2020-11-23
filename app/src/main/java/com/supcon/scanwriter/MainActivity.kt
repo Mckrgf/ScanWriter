@@ -19,7 +19,7 @@ class MainActivity : BaseActivity() {
         checkPermission()
         bt_scan.setOnClickListener {
             val intent = Intent()
-            intent.setClass(this, CaptureActivity::class.java)
+            intent.setClass(this, DeviceListForScanActivity::class.java)
             startActivityForResult(intent,101)
         }
     }
