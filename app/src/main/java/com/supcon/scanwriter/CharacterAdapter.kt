@@ -18,13 +18,20 @@ class CharacterAdapter(activity: DeviceControlActivity) : BaseQuickAdapter<HashM
     private var dataAll: ArrayList<HashMap<String, String>> = ArrayList()
     override fun convert(holder: BaseViewHolder, item: HashMap<String, String>) {
         holder.getView<TextView>(R.id.tv_character_name).text = item["NAME"]
-        holder.getView<TextView>(R.id.tv_character_value).text = item["VALUE"]
+        var aaa = item["VALUE"]?.trim()
+        aaa = aaa?.replace(" ","")
+        if (item["NAME"]?.equals("设备ID")!!) {
+            holder.getView<TextView>(R.id.tv_character_value).text = item["VALUE"]?.trim()
+        }
+        holder.getView<TextView>(R.id.tv_character_value).text = aaa
         holder.getView<Button>(R.id.tv_character_get).setOnClickListener {
             mActivity.getValue(holder.adapterPosition)
         }
         holder.getView<TextView>(R.id.tv_character_value).addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 data[holder.adapterPosition]["VALUE"] = s.toString()
+
+
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

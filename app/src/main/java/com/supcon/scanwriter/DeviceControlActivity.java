@@ -31,14 +31,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.blankj.utilcode.util.ToastUtils;
+import com.uuzuche.lib_zxing.activity.CaptureActivity;
+import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.yaobing.module_middleware.activity.BaseActivity;
 
 import java.util.ArrayList;
@@ -71,6 +76,7 @@ public class DeviceControlActivity extends BaseActivity {
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
 
+    private Button btScan;
     // Code to manage Service lifecycle.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -149,6 +155,7 @@ public class DeviceControlActivity extends BaseActivity {
     private RecyclerView rvCharacter;
 
     boolean showChangeResult = false;//在获取的时候提示获取成功（false），在写入的时候提示写入成功（true）
+
     public void getValue(int childPosition) {
         showChangeResult = false;
         currentPosition = childPosition;
@@ -196,6 +203,12 @@ public class DeviceControlActivity extends BaseActivity {
         mGattServicesList.setOnChildClickListener(servicesListClickListner);
         mConnectionState = (TextView) findViewById(R.id.connection_state);
         mDataField = (TextView) findViewById(R.id.data_value);
+        btScan = (Button) findViewById(R.id.bt_scan);
+        btScan.setVisibility(View.VISIBLE);
+        btScan.setOnClickListener(v -> {
+            Intent intent1 = new Intent(this, CaptureActivity.class);
+            startActivityForResult(intent1,101);
+        });
 
 //        getActionBar().setTitle(mDeviceName);
 //        getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -240,6 +253,13 @@ public class DeviceControlActivity extends BaseActivity {
                         byte[] a = DataTransform.Stringtobytes(value);
                         mBluetoothLeService.write(a);
                         showChangeResult = true;
+                    } else if (characteristic.getUuid().toString().contains("0000fff4")) {
+                        String value1 = adapter.getData().get(currentPosition).get("VALUE");
+                        byte[] a = DataTransform.hexString2Bytes(value1);
+                        mBluetoothLeService.write(a);
+                        showChangeResult = true;
+                        Log.d("c", "v");
+
                     } else {
                         ToastUtils.showLong("只能修改信号强度信息和广播间隔信息,请先获取信号强度的值后编辑，点击提交");
                     }
@@ -255,6 +275,7 @@ public class DeviceControlActivity extends BaseActivity {
             }
         });
     }
+
 
     @Override
     protected void onResume() {
@@ -335,7 +356,7 @@ public class DeviceControlActivity extends BaseActivity {
                 assert hex != null;
                 hex = hex.trim();
                 int ten = Integer.parseInt(hex, 16);
-                item.put("VALUE",ten+"");
+                item.put("VALUE", ten + "");
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
@@ -412,5 +433,22 @@ public class DeviceControlActivity extends BaseActivity {
         intentFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
         intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
         return intentFilter;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (null != data) {
+            Bundle bundle = data.getExtras();
+            if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+                String result = bundle.getString(CodeUtils.RESULT_STRING);
+                Toast.makeText(this, "解析结果: " + result, Toast.LENGTH_LONG).show();
+                HashMap<String,String> da = adapter.getItem(currentPosition);
+                da.put("VALUE",result);
+                adapter.setData(currentPosition,da);
+            } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
+                Toast.makeText(this, "解析二维码失败", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

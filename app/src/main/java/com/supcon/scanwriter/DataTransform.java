@@ -232,9 +232,9 @@ public class DataTransform {
         if ((hex == null) || (hex.equals(""))){
             return null;
         }
-        else if (hex.length()%2 != 0){
-            return null;
-        }
+//        else if (hex.length()%2 != 0){
+////            return null;
+//        }
         else{
             hex = hex.toUpperCase();
             int len = hex.length()/2;

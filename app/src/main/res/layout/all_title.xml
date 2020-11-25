@@ -84,13 +84,24 @@
         android:visibility="gone" />
 
     <Button
+        android:id="@+id/bt_scan"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/y64"
+        android:background="@drawable/bg_button_blue_round"
+        android:text="扫二维码"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:layout_marginRight="@dimen/x24"
+        android:textSize="@dimen/x32" />
+
+    <Button
         android:id="@+id/bt_commit"
         android:layout_width="@dimen/x152"
         android:layout_height="@dimen/y64"
         android:background="@drawable/bg_button_blue_round"
         android:text="@string/submit"
-        android:textColor="@color/white"
         android:visibility="gone"
+        android:textColor="@color/white"
         android:layout_marginRight="@dimen/x24"
         android:textSize="@dimen/x32" />
 
