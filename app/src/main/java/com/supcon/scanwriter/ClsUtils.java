@@ -25,6 +25,15 @@ public class ClsUtils {
 
     }
 
+    //确认配对
+
+    static public void setPairingConfirmation(Class<?> btClass,BluetoothDevice device,boolean isConfirm)throws Exception
+    {
+        Method setPairingConfirmation = btClass.getDeclaredMethod("setPairingConfirmation",boolean.class);
+        setPairingConfirmation.invoke(device,isConfirm);
+    }
+
+
     /**
      * 与设备解除配对 参考源码：platform/packages/apps/Settings.git
      * /Settings/src/com/android/settings/bluetooth/CachedBluetoothDevice.java
@@ -140,7 +149,6 @@ public class ClsUtils {
     }
 
     /**
-     *
      * @param clsShow
      */
     static public void printAllInform(Class clsShow) {

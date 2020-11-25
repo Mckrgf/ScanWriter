@@ -12,6 +12,7 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.animation.TranslateAnimation
@@ -281,6 +282,7 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
         if (mReceiver == null) {
             mReceiver = BlueToothBondReceiver()
             val intentFilter = IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED)
+            intentFilter.addAction(BluetoothDevice.ACTION_PAIRING_REQUEST)
             registerReceiver(mReceiver, intentFilter)
         }
     }
@@ -307,7 +309,20 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
                             mwaitdlg?.dismiss()
                         }
                         mDeviceListAdapter.notifyItemChanged(currentDevicePosition)
-                        LogUtils.d("配对成功，刷新界面")
+//                        val device = adapter.data[currentDevicePosition] as BluetoothDevice
+                        if (bleBonded(currentDevice!!)) {
+                            val intent = Intent(this@DeviceListForScanActivity, DeviceControlActivity::class.java)
+                            intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.name)
+                            intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.address)
+                            if (mScanning) {
+                                mBluetoothAdapter?.stopLeScan(mLeScanCallback)
+                                mScanning = false
+                            }
+                            startActivity(intent)
+                        } else {
+                            ToastUtils.showLong("连接设备之前需要 【长按】 以绑定设备")
+                        }
+                        LogUtils.d("配对成功，直接跳转")
                     }
                     BluetoothDevice.BOND_NONE -> {
                         //取消配对/未配对
@@ -319,6 +334,20 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
                     }
                     else -> {
                     }
+                }
+            }else if (intent.action == BluetoothDevice.ACTION_PAIRING_REQUEST) {
+                try {
+
+                    //1.确认配对
+//                    ClsUtils.setPairingConfirmation(BluetoothDevice::class.java, currentDevice,true)
+                    //2.终止有序广播
+                    abortBroadcast() //如果没有将广播终止，则会出现一个一闪而过的配对框。
+                    //3.调用setPin方法进行配对...
+                    val ret = ClsUtils.setPin(BluetoothDevice::class.java, currentDevice, "951357")
+                    Log.d("zxcv","配对结果$ret")
+                } catch (e: Exception) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace()
                 }
             }
         }

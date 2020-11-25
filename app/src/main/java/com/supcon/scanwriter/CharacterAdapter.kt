@@ -1,6 +1,7 @@
 package com.supcon.scanwriter
 
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.widget.Button
 import android.widget.TextView
@@ -22,6 +23,7 @@ class CharacterAdapter(activity: DeviceControlActivity) : BaseQuickAdapter<HashM
         aaa = aaa?.replace(" ","")
         if (item["NAME"]?.equals("设备ID")!!) {
             holder.getView<TextView>(R.id.tv_character_value).text = item["VALUE"]?.trim()
+            holder.getView<TextView>(R.id.tv_character_value).inputType = InputType.TYPE_CLASS_TEXT
         }
         holder.getView<TextView>(R.id.tv_character_value).text = aaa
         holder.getView<Button>(R.id.tv_character_get).setOnClickListener {
