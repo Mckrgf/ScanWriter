@@ -24,6 +24,9 @@ class CharacterAdapter(activity: DeviceControlActivity) : BaseQuickAdapter<HashM
         if (item["NAME"]?.equals("设备ID")!!) {
             holder.getView<TextView>(R.id.tv_character_value).text = item["VALUE"]?.trim()
             holder.getView<TextView>(R.id.tv_character_value).inputType = InputType.TYPE_CLASS_TEXT
+            holder.getView<TextView>(R.id.tv_character_get).isEnabled = true
+        }else {
+            holder.getView<TextView>(R.id.tv_character_get).isEnabled = false
         }
         holder.getView<TextView>(R.id.tv_character_value).text = aaa
         holder.getView<Button>(R.id.tv_character_get).setOnClickListener {
