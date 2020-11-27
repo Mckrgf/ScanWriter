@@ -37,7 +37,6 @@ class MainActivity : BaseActivity() {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.BLUETOOTH_PRIVILEGED,
             Manifest.permission.RECORD_AUDIO
         ), object : PermissionListener {
             override fun onGranted() {  //所有权限授权成功
