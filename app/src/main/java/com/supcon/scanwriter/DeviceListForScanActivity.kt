@@ -44,6 +44,8 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
 
     private var currentDevicePosition: Int = -1
 
+    private var rssiDevice : HashMap<BluetoothDevice,Int> = HashMap()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_device_list)
@@ -213,10 +215,12 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
         invalidateOptionsMenu()
     }
 
-    val mLeScanCallback = BluetoothAdapter.LeScanCallback { device, _, _ ->
+    val mLeScanCallback = BluetoothAdapter.LeScanCallback { device, rssi, _ ->
         runOnUiThread {
             number_progress_bar.progress = (System.currentTimeMillis() - scanTime).toInt()
             if (number_progress_bar.progress > number_progress_bar.max-300) number_progress_bar.progress = number_progress_bar.max
+            rssiDevice[device] = rssi
+            mDeviceListAdapter.setRssi(rssiDevice)
             mDeviceListAdapter.addDevice(device)
             mDeviceListAdapter.notifyDataSetChanged()
         }

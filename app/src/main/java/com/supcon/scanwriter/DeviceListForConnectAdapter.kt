@@ -1,5 +1,6 @@
 package com.supcon.scanwriter
 
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
 import android.os.Bundle
@@ -21,11 +22,13 @@ class DeviceListForConnectAdapter(activity: DeviceListForScanActivity) : BaseQui
     private var mActivity: DeviceListForScanActivity = activity
     private var mLeDevices: ArrayList<BluetoothDevice>? = null
     private var currentClick = -1
+    private var rssiDevice : HashMap<BluetoothDevice,Int> = HashMap()
 
     init {
         mLeDevices = ArrayList()
     }
 
+    @SuppressLint("SetTextI18n")
     override fun convert(holder: BaseViewHolder, item: BluetoothDevice) {
         holder.getView<TextView>(R.id.tv_name).text = item.name
         holder.getView<TextView>(R.id.tv_address).text = item.address
@@ -51,6 +54,7 @@ class DeviceListForConnectAdapter(activity: DeviceListForScanActivity) : BaseQui
 //            val aaa = item.createBond()
 //            LogUtils.d("绑定结果：$aaa")
 //        }
+        holder.getView<TextView>(R.id.tv_address).text = "信号强度：" + rssiDevice[item].toString()
 
         holder.getView<TextView>(R.id.tv_device_bond_state).text = bondState
         holder.getView<ImageView>(R.id.iv_map).setOnClickListener {
@@ -82,6 +86,11 @@ class DeviceListForConnectAdapter(activity: DeviceListForScanActivity) : BaseQui
 
     fun clear() {
         mLeDevices?.clear()
+        notifyDataSetChanged()
+    }
+
+    fun setRssi(rssiDevice: HashMap<BluetoothDevice, Int>) {
+        this.rssiDevice = rssiDevice
         notifyDataSetChanged()
     }
 }
