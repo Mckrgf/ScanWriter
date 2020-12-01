@@ -81,6 +81,12 @@
             android:textSize="@dimen/x24"
             android:id="@+id/tv_count"/>
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/bt_sort"
+            android:text="排序"/>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"

@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.supcon.scanwriter.bean.MyBluetoothDevice
 import com.supcon.supbeacon.event.HttpEvent
 import com.yaobing.module_middleware.activity.BaseActivity
 import kotlinx.android.synthetic.main.activity_device_list.*
@@ -88,7 +90,8 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
         rb_scan.isChecked = true
         iv_return.setOnClickListener { finish() }
         mDeviceListAdapter.setOnItemClickListener { adapter, view, position ->
-            val device = adapter.data[position] as BluetoothDevice
+            val myBluetoothDevice = adapter.data[position] as MyBluetoothDevice
+            val device = myBluetoothDevice.device
             if (bleBonded(device)) {
                 val intent = Intent(this, DeviceControlActivity::class.java)
                 intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.name)
@@ -113,9 +116,10 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
             closeBottomDialog(dialogAnimationDown)
         }
         mDeviceListAdapter.setOnItemLongClickListener { adapter, view, position ->
-            currentDevice = adapter.data[position] as BluetoothDevice
+            val myBluetoothDevice = adapter.data[position] as MyBluetoothDevice
+            currentDevice = myBluetoothDevice.device
             currentDevicePosition = position
-            if (bleBonded(adapter.data[position] as BluetoothDevice)) {
+            if (bleBonded(currentDevice!!)) {
                 //底部弹窗解绑设备
                 LogUtils.d("弹窗解绑")
                 showBottomDialog("解绑", dialogAnimationUp)
@@ -155,6 +159,43 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
             }
             closeBottomDialog(dialogAnimationDown)
         }
+
+        bt_sort.setOnClickListener {
+            if (mDeviceListAdapter.data.size > 0) {
+                val data = sortItem(mDeviceListAdapter.data)
+                mDeviceListAdapter.setList(data)
+            }
+        }
+    }
+
+    private fun sortItem(list: MutableList<MyBluetoothDevice>): MutableList<MyBluetoothDevice> {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            list!!.sortWith(Comparator { o1, o2 ->
+                var date1 = 0
+                var date2 = 0
+                if (o1 is MyBluetoothDevice) {
+                    val item: MyBluetoothDevice = o1
+                    date1 = item.rssi
+                } else {
+                    val item: MyBluetoothDevice = o1 as MyBluetoothDevice
+                    date1 = item.rssi
+                }
+                if (o2 is MyBluetoothDevice) {
+                    val item: MyBluetoothDevice = o2 as MyBluetoothDevice
+                    date2 = item.rssi
+                } else {
+                    val item: MyBluetoothDevice = o2 as MyBluetoothDevice
+                    date2 = item.rssi
+                }
+
+                if (date1 >= date2) {
+                    -1
+                } else{
+                    1
+                }
+            })
+        }
+        return list
     }
 
     private fun closeBottomDialog(dialogAnimationDown: TranslateAnimation) {
@@ -220,8 +261,10 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
             number_progress_bar.progress = (System.currentTimeMillis() - scanTime).toInt()
             if (number_progress_bar.progress > number_progress_bar.max-300) number_progress_bar.progress = number_progress_bar.max
             rssiDevice[device] = rssi
-            mDeviceListAdapter.setRssi(rssiDevice)
-            mDeviceListAdapter.addDevice(device)
+            val myBluetoothDevice = MyBluetoothDevice()
+            myBluetoothDevice.device = device
+            myBluetoothDevice.rssi = rssi
+            mDeviceListAdapter.addDevice(myBluetoothDevice)
             mDeviceListAdapter.notifyDataSetChanged()
         }
     }
@@ -264,7 +307,9 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
         if ((mBluetoothAdapter?.bondedDevices?.size)!! > 0) {
             for (i in 0 until mBluetoothAdapter?.bondedDevices!!.size) {
                 val device = mBluetoothAdapter?.bondedDevices!!.distinct()[i]
-                mDeviceListAdapter.addDevice(device)
+                val myBluetoothDevice = MyBluetoothDevice()
+                myBluetoothDevice.device = device
+                mDeviceListAdapter.addDevice(myBluetoothDevice)
             }
         }
     }
