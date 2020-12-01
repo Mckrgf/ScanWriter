@@ -19,9 +19,7 @@ import java.util.*
  * @desc   : 搜索到准备绑定（bond）的搜索列表适配器
  */
 class DeviceListForConnectAdapter(activity: DeviceListForScanActivity) : BaseQuickAdapter<BluetoothDevice, BaseViewHolder>(R.layout.item_ble_device_for_connect) {
-    private var mActivity: DeviceListForScanActivity = activity
     private var mLeDevices: ArrayList<BluetoothDevice>? = null
-    private var currentClick = -1
     private var rssiDevice : HashMap<BluetoothDevice,Int> = HashMap()
 
     init {
@@ -49,32 +47,8 @@ class DeviceListForConnectAdapter(activity: DeviceListForScanActivity) : BaseQui
             }
         }
         holder.getView<TextView>(R.id.tv_device_bond_state).text = bondState
-//        holder.getView<Button>(R.id.bt_bond).isEnabled = canBeBonded
-//        holder.getView<Button>(R.id.bt_bond).setOnClickListener {
-//            val aaa = item.createBond()
-//            LogUtils.d("绑定结果：$aaa")
-//        }
         holder.getView<TextView>(R.id.tv_address).text = "信号强度：" + rssiDevice[item].toString()
-
         holder.getView<TextView>(R.id.tv_device_bond_state).text = bondState
-        holder.getView<ImageView>(R.id.iv_map).setOnClickListener {
-//            val device = data[holder.adapterPosition] as BluetoothDevice
-//            val intent = Intent(mActivity, DialogMapActivity::class.java)
-//            intent.putExtra("device",device)
-//            mActivity.startActivity(intent)
-        }
-
-//        holder.getView<Button>(R.id.bt_connect).isEnabled = !canBeBonded
-//        holder.getView<Button>(R.id.bt_connect).setOnClickListener {
-//            val intent = Intent(context, DeviceControlActivity::class.java)
-//            intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, item.getName())
-//            intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, item.getAddress())
-//            if (mActivity.mScanning) {
-//                mActivity.mBluetoothAdapter?.stopLeScan(mActivity.mLeScanCallback)
-//                mActivity.mScanning = false
-//            }
-//            context.startActivity(intent)
-//        }
     }
 
     fun addDevice(device: BluetoothDevice?) {
