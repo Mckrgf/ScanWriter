@@ -148,7 +148,7 @@ public class DeviceControlActivity extends BaseActivity {
             return false;
         }
     };
-    private int currentPosition = -1;
+    private int currentPosition = 3;
     private CharacterAdapter adapter;
     private RecyclerView rvCharacter;
 
@@ -422,6 +422,11 @@ public class DeviceControlActivity extends BaseActivity {
         adapter = new CharacterAdapter(this);
         adapter.setNewData(gattCharacteristicData.get(0));
         rvCharacter.setAdapter(adapter);
+
+
+        //设置默认的特征地址，使得用户不需要再点击获取设备ID后才能写入
+        characteristic = mGattCharacteristics.get(0).get(3);
+        mBluetoothLeService.mCurrentCharacteristic = characteristic;
     }
 
     private static IntentFilter makeGattUpdateIntentFilter() {
@@ -438,13 +443,14 @@ public class DeviceControlActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (null != data) {
             Bundle bundle = data.getExtras();
-            if (bundle.getInt("CodeUtils.RESULT_TYPE") == 1) {
-                String result = bundle.getString("CodeUtils.RESULT_STRING");
+            assert bundle != null;
+            if (bundle.getInt(Constant.RESULT_TYPE) == Constant.QR_SUCCESS) {
+                String result = bundle.getString(Constant.RESULT_STRING);
                 Toast.makeText(this, "解析结果: " + result, Toast.LENGTH_LONG).show();
                 HashMap<String,String> da = adapter.getItem(currentPosition);
                 da.put("VALUE",result);
                 adapter.setData(currentPosition,da);
-            } else if (bundle.getInt("CodeUtils.RESULT_TYPE") == 0) {
+            } else if (bundle.getInt(Constant.RESULT_TYPE) == Constant.QR_FAIL) {
                 Toast.makeText(this, "解析二维码失败", Toast.LENGTH_LONG).show();
             }
         }

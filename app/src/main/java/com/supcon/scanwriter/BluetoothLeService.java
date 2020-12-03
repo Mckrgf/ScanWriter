@@ -54,7 +54,7 @@ public class BluetoothLeService extends Service {
     private String mBluetoothDeviceAddress;
     private BluetoothGatt mBluetoothGatt;
     private int mConnectionState = STATE_DISCONNECTED;
-    private BluetoothGattCharacteristic mCurrentCharacteristic = null;
+    BluetoothGattCharacteristic mCurrentCharacteristic = null;
 
     private static final int STATE_DISCONNECTED = 0;
     private static final int STATE_CONNECTING = 1;

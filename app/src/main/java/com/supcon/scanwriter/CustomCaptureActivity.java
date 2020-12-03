@@ -24,6 +24,7 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
 import com.king.zxing.CaptureActivity;
+import com.king.zxing.DecodeFormatManager;
 import com.king.zxing.camera.FrontLightMode;
 import com.king.zxing.util.CodeUtils;
 
@@ -46,14 +47,14 @@ public class CustomCaptureActivity extends CaptureActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
 //        StatusBarUtils.immersiveStatusBar(this,toolbar,0.2f);
         TextView tvTitle = findViewById(R.id.tvTitle);
-        tvTitle.setText("getIntent().getStringExtra(MainActivity.KEY_TITLE)");
+        tvTitle.setText("二维码扫描");
 
         isContinuousScan = true;
         //获取CaptureHelper，里面有扫码相关的配置设置
         getCaptureHelper().playBeep(false)//播放音效
                 .vibrate(true)//震动
                 .supportVerticalCode(true)//支持扫垂直条码，建议有此需求时才使用。
-//                .decodeFormats(DecodeFormatManager.QR_CODE_FORMATS)//设置只识别二维码会提升速度
+                .decodeFormats(DecodeFormatManager.QR_CODE_FORMATS)//设置只识别二维码会提升速度
 //                .framingRectRatio(0.9f)//设置识别区域比例，范围建议在0.625 ~ 1.0之间。非全屏识别时才有效
 //                .framingRectVerticalOffset(0)//设置识别区域垂直方向偏移量，非全屏识别时才有效
 //                .framingRectHorizontalOffset(0)//设置识别区域水平方向偏移量，非全屏识别时才有效
@@ -76,8 +77,8 @@ public class CustomCaptureActivity extends CaptureActivity {
             Toast.makeText(this,result, Toast.LENGTH_SHORT).show();
             Intent resultIntent = new Intent();
             Bundle bundle = new Bundle();
-            bundle.putInt("CodeUtils.RESULT_TYPE", 1);
-            bundle.putString("CodeUtils.RESULT_STRING", result);
+            bundle.putInt(Constant.RESULT_TYPE, Constant.QR_SUCCESS);
+            bundle.putString(Constant.RESULT_STRING, result);
             resultIntent.putExtras(bundle);
             setResult(RESULT_OK, resultIntent);
             finish();
