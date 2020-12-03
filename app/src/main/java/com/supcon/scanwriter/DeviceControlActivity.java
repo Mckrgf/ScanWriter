@@ -42,8 +42,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.blankj.utilcode.util.ToastUtils;
-import com.uuzuche.lib_zxing.activity.CaptureActivity;
-import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.yaobing.module_middleware.activity.BaseActivity;
 
 import java.util.ArrayList;
@@ -206,7 +204,7 @@ public class DeviceControlActivity extends BaseActivity {
         btScan = (Button) findViewById(R.id.bt_scan);
         btScan.setVisibility(View.VISIBLE);
         btScan.setOnClickListener(v -> {
-            Intent intent1 = new Intent(this, CaptureActivity.class);
+            Intent intent1 = new Intent(this, CustomCaptureActivity.class);
             startActivityForResult(intent1,101);
         });
 
@@ -440,13 +438,13 @@ public class DeviceControlActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (null != data) {
             Bundle bundle = data.getExtras();
-            if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-                String result = bundle.getString(CodeUtils.RESULT_STRING);
+            if (bundle.getInt("CodeUtils.RESULT_TYPE") == 1) {
+                String result = bundle.getString("CodeUtils.RESULT_STRING");
                 Toast.makeText(this, "解析结果: " + result, Toast.LENGTH_LONG).show();
                 HashMap<String,String> da = adapter.getItem(currentPosition);
                 da.put("VALUE",result);
                 adapter.setData(currentPosition,da);
-            } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
+            } else if (bundle.getInt("CodeUtils.RESULT_TYPE") == 0) {
                 Toast.makeText(this, "解析二维码失败", Toast.LENGTH_LONG).show();
             }
         }

@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.blankj.utilcode.util.ToastUtils
-import com.uuzuche.lib_zxing.activity.CaptureActivity
-import com.uuzuche.lib_zxing.activity.CodeUtils
 import com.yaobing.module_middleware.Utils.ToastUtil
 import com.yaobing.module_middleware.activity.BaseActivity
 import com.yaobing.module_middleware.interfaces.PermissionListener
@@ -23,11 +21,7 @@ class MainActivity : BaseActivity() {
             intent.setClass(this, DeviceListForScanActivity::class.java)
             startActivityForResult(intent,101)
         }
-        bt_scan1.setOnClickListener {
-            val intent = Intent()
-            intent.setClass(this, CaptureActivity::class.java)
-            startActivityForResult(intent,101)
-        }
+
     }
 
     private fun checkPermission() {
@@ -61,16 +55,4 @@ class MainActivity : BaseActivity() {
         })
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (null != data) {
-            val bundle = data.extras ?: return
-            if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-                val result = bundle.getString(CodeUtils.RESULT_STRING)
-                Toast.makeText(this, "解析结果:$result", Toast.LENGTH_LONG).show()
-            } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                Toast.makeText(this@MainActivity, "解析二维码失败", Toast.LENGTH_LONG).show()
-            }
-        }
-    }
 }
