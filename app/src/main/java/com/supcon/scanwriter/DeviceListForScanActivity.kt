@@ -100,6 +100,7 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
                     this.mBluetoothAdapter?.stopLeScan(this.mLeScanCallback)
                     this.mScanning = false
                 }
+                scanDevice(false)
                 startActivity(intent)
             } else {
                 ToastUtils.showLong("连接设备之前需要 【长按】 以绑定设备")
@@ -265,7 +266,6 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
             myBluetoothDevice.device = device
             myBluetoothDevice.rssi = rssi
             mDeviceListAdapter.addDevice(myBluetoothDevice)
-            mDeviceListAdapter.notifyDataSetChanged()
         }
     }
 
@@ -277,7 +277,7 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
         } else {
 
             mDeviceListAdapter.clear()
-            addBondedDevice()
+//            addBondedDevice()
             scanDevice(true)
         }
     }
@@ -297,7 +297,7 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
                 if (mScanning) {
                     //如果是开始扫描，就先清除设备，然后添加绑定好的设备
                     mDeviceListAdapter.clear()
-                    addBondedDevice()
+//                    addBondedDevice()
                 }
             }
         }
