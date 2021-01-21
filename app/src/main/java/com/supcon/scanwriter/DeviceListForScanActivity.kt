@@ -48,6 +48,9 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
 
     private var rssiDevice : HashMap<BluetoothDevice,Int> = HashMap()
 
+    //0是绑定，1是解绑
+    private var bondAction = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_device_list)
@@ -135,6 +138,7 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
         tv_bond.setOnClickListener {
             when (currentDevice?.bondState) {
                 BluetoothDevice.BOND_BONDED -> {
+                    bondAction = 1
                     if (ClsUtils.removeBond(BluetoothDevice::class.java, currentDevice)) {
                         ToastUtils.showLong("解除绑定成功")
                         mDeviceListAdapter.notifyItemChanged(currentDevicePosition)
@@ -155,6 +159,7 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
                     ToastUtils.showLong("正在绑定中")
                 }
                 BluetoothDevice.BOND_NONE -> {
+                    bondAction = 0
                     currentDevice?.createBond()
                 }
             }
@@ -378,6 +383,9 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
                         LogUtils.d("取消配对/未配对")
                         if (mwaitdlg?.isShowing!!) {
                             mwaitdlg?.dismiss()
+                        }
+                        if (bondAction == 1) {
+                            ToastUtils.showLong("配对失败，请重试或者重启蓝牙")
                         }
                         mDeviceListAdapter.notifyItemChanged(currentDevicePosition)
                     }
