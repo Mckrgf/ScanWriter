@@ -175,7 +175,6 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun sortItem(list: MutableList<MyBluetoothDevice>): MutableList<MyBluetoothDevice> {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             list!!.sortWith(Comparator { o1, o2 ->
                 var date1 = 0
                 var date2 = 0
@@ -200,7 +199,7 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
                     1
                 }
             })
-        }
+
         return list
     }
 
