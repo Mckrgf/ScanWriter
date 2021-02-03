@@ -50,6 +50,8 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
 
     //0是绑定，1是解绑
     private var bondAction = 0
+    private var deviceNeedRemove : BluetoothDevice? = null
+    private var deviceNeedRemovePosition = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,6 +96,8 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
         iv_return.setOnClickListener { finish() }
         mDeviceListAdapter.setOnItemClickListener { adapter, view, position ->
             val myBluetoothDevice = adapter.data[position] as MyBluetoothDevice
+            deviceNeedRemove = myBluetoothDevice.device
+            deviceNeedRemovePosition = position
             val device = myBluetoothDevice.device
             if (bleBonded(device)) {
                 val intent = Intent(this, DeviceControlActivity::class.java)
@@ -104,7 +108,7 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
                     this.mScanning = false
                 }
                 scanDevice(false)
-                startActivity(intent)
+                startActivityForResult(intent,111)
             } else {
                 ToastUtils.showLong("连接设备之前需要 【长按】 以绑定设备")
             }
@@ -364,6 +368,8 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
                         mDeviceListAdapter.notifyItemChanged(currentDevicePosition)
 //                        val device = adapter.data[currentDevicePosition] as BluetoothDevice
                         if (bleBonded(currentDevice!!)) {
+                            deviceNeedRemove = device
+                            deviceNeedRemovePosition = currentDevicePosition
                             val intent = Intent(this@DeviceListForScanActivity, DeviceControlActivity::class.java)
                             intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.name)
                             intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.address)
@@ -371,7 +377,7 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
                                 mBluetoothAdapter?.stopLeScan(mLeScanCallback)
                                 mScanning = false
                             }
-                            startActivity(intent)
+                            startActivityForResult(intent,111)
                         } else {
                             ToastUtils.showLong("连接设备之前需要 【长按】 以绑定设备")
                         }
@@ -405,6 +411,16 @@ class DeviceListForScanActivity : BaseActivity(), View.OnClickListener {
                     // TODO Auto-generated catch block
                     e.printStackTrace()
                 }
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 111 && resultCode == 111) {
+            if (ClsUtils.removeBond(BluetoothDevice::class.java, deviceNeedRemove)) {
+                ToastUtils.showLong("解除绑定成功")
+                mDeviceListAdapter.notifyItemChanged(deviceNeedRemovePosition)
             }
         }
     }

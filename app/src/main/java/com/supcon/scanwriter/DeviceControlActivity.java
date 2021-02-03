@@ -269,6 +269,7 @@ public class DeviceControlActivity extends BaseActivity {
         findViewById(R.id.iv_return).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setResult(111);
                 finish();
             }
         });
@@ -289,6 +290,12 @@ public class DeviceControlActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(mGattUpdateReceiver);
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(111);
+        super.onBackPressed();
     }
 
     @Override
