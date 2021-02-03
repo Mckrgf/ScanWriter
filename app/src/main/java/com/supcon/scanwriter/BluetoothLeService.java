@@ -107,7 +107,6 @@ public class BluetoothLeService extends Service {
             }
         }
 
-        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt,
                                          BluetoothGattCharacteristic characteristic,
